@@ -28,7 +28,7 @@ namespace AsyncOperations
         /*
          * Container for DataGridView.DataSource
          */
-        private BindingSource _productBindingSource = new BindingSource();
+        private readonly BindingSource _productBindingSource = new BindingSource();
 
         /*
          * Container for suppliers which is used each time the DataGridView is populated
@@ -213,10 +213,6 @@ namespace AsyncOperations
 
         }
 
-        private void ExitButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
+        private void ExitButton_Click(object sender, EventArgs e) => Close();
     }
 }
