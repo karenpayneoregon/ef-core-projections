@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using AsyncOperations.Classes;
 using AsyncOperations.Components;
+using AsyncOperations.Examples;
 using AsyncOperations.LanguageExtensions;
 using AsyncOperations.Projections;
 using Microsoft.EntityFrameworkCore;
@@ -190,14 +191,26 @@ namespace AsyncOperations
                 return;
             }
 
-            var checkedProducts = _productView.Where(product => product.Process);
+            var checkedProducts = _productView.Where(product => product.Process).ToList();
 
-            foreach (var product in checkedProducts)
+            if (checkedProducts.Count >0)
             {
-                Console.WriteLine($"Id: {product.ProductId}, Name: {product.ProductName}");
+                var f = new CheckProductsForm(checkedProducts, CategoryComboBox.Text);
+                try
+                {
+                    f.ShowDialog();
+                }
+                finally
+                {
+                    f.Dispose();
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("No checked products");
             }
 
-            Console.WriteLine();
         }
 
         private void ExitButton_Click(object sender, EventArgs e)

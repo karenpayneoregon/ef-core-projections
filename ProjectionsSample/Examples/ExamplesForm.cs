@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using static AsyncOperations.Classes.Dialogs;
 using System.Windows.Forms;
 using AsyncOperations.Classes;
@@ -43,9 +44,10 @@ namespace AsyncOperations.Examples
             CategoryConventionalComboBox.DataSource = categories;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-            Operations.GetOrders();
+            var order = await Operations.GetOrders1(10);
+            Console.WriteLine();
         }
     }
 }

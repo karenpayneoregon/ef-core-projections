@@ -13,8 +13,7 @@ namespace AsyncOperations.Classes
 {
     public class Operations
     {
-        private static readonly NorthWindContext NorthWindContext = new NorthWindContext(); 
-        public static NorthWindContext Context => NorthWindContext;
+        public static NorthWindContext Context { get; } = new NorthWindContext();
 
         /// <summary>
         /// Get all categories suitable for displaying in a ComboBox or
@@ -29,7 +28,7 @@ namespace AsyncOperations.Classes
             await Task.Run(async () =>
             {
 
-                categoryList = await NorthWindContext.Categories
+                categoryList = await Context.Categories
                     .AsNoTracking().Select(Category.Projection)
                     .ToListAsync();
 
@@ -51,7 +50,7 @@ namespace AsyncOperations.Classes
             await Task.Run(async () =>
             {
 
-                categoryList = await NorthWindContext.Categories
+                categoryList = await Context.Categories
                     .AsNoTracking()
                     .ToListAsync();
 
@@ -63,14 +62,14 @@ namespace AsyncOperations.Classes
         public static List<Categories> GetCategoriesAllNotTracked()
         {
 
-            return NorthWindContext.Categories
+            return Context.Categories
                 .AsNoTracking()
                 .ToList();
 
         }
         public static List<Categories> GetCategoriesAllTracked()
         {
-            return NorthWindContext.Categories
+            return Context.Categories
                 .ToList();
         }
 
@@ -89,7 +88,7 @@ namespace AsyncOperations.Classes
             await Task.Run(async () =>
             {
 
-                supplierList = await NorthWindContext.Suppliers
+                supplierList = await Context.Suppliers
                     .AsNoTracking()
                     .Select(Supplier.Projection)
                     .ToListAsync();
@@ -111,7 +110,7 @@ namespace AsyncOperations.Classes
                     var lines = File.ReadAllLines("SomeNonExistingFile.txt");
                 }
 
-                productList = await NorthWindContext.Products
+                productList = await Context.Products
                     .Include(product => product.Supplier)
                     .Where(product => product.CategoryId == categoryIdentifier)
                     .ToListAsync();
@@ -120,30 +119,74 @@ namespace AsyncOperations.Classes
 
             return productList;
         }
-        /// <summary>
-        /// Using extension methods
-        /// </summary>
-        public static async void GetOrders()
+        #region permutations for projections
+
+        public static async Task<Orders> GetOrders(int customerIdentifier)
         {
+            Orders orders1 = null;
 
             await Task.Run(async () =>
             {
-                var orders1 = await NorthWindContext.Orders
-                    .IncludeDetails()
-                    .IncludeCustomer()
-                    .FirstOrDefaultAsync(x => x.CustomerIdentifier == 10);
 
-                var orders2 = await NorthWindContext.Orders
-                    .IncludeCustomerAndContact()
-                    .FirstOrDefaultAsync(x => x.CustomerIdentifier == 10);
-
-                var order3 = await NorthWindContext.Orders.IncludeOptions(contact: true, contactType: true).FirstOrDefaultAsync();
-
-
+                orders1 = await Context
+                    .Orders.Include(orders => orders.OrderDetails)
+                    .Include(orders => orders.CustomerIdentifierNavigation)
+                    .FirstOrDefaultAsync(x => x.CustomerIdentifier == customerIdentifier);
 
             });
 
-
+            return orders1;
         }
+        /// <summary>
+        /// Using extension methods
+        /// </summary>
+        public static async Task<Orders> GetOrders1(int customerIdentifier)
+        {
+            Orders order = null;
+
+            await Task.Run(async () =>
+            {
+
+                order = await Context.Orders
+                    .IncludeDetails()
+                    .IncludeCustomer()
+                    .FirstOrDefaultAsync(x => x.CustomerIdentifier == customerIdentifier);
+
+            });
+
+            return order;
+        }
+        public static async Task<Orders> GetOrders2(int customerIdentifier)
+        {
+            Orders order = null;
+
+            await Task.Run(async () =>
+            {
+
+                order = await Context.Orders
+                    .IncludeCustomerAndContact()
+                    .FirstOrDefaultAsync(x => x.CustomerIdentifier == customerIdentifier);
+
+            });
+
+            return order;
+        }
+        public static async Task<Orders> GetOrders3(int customerIdentifier)
+        {
+            Orders order = null;
+
+            await Task.Run(async () =>
+            {
+
+                order = await Context.Orders
+                    .IncludeOptions(contact: true, contactType: true)
+                    .FirstOrDefaultAsync();
+
+            });
+
+            return order;
+        }
+
+        #endregion
     }
 }
