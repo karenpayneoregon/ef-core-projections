@@ -1,12 +1,11 @@
 ﻿using System;
+using ConsoleLoggingExample.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 using static Microsoft.Extensions.Logging.LoggerFactory;
 
 
-namespace AsyncOperations
+namespace ConsoleLoggingExample.Contexts
 {
     public partial class NorthWindContext : DbContext
     {
