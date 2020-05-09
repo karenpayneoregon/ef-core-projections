@@ -88,7 +88,6 @@ namespace AsyncOperations
             if (dataGridView1.Columns[e.ColumnIndex].Name == "SupplierColumn")
             {
                 var currentProduct = _productView[_productBindingSource.Position];
-                Console.WriteLine();
             }
         }
 
@@ -144,11 +143,12 @@ namespace AsyncOperations
                 dataGridView1.DataSource = _productBindingSource;
 
                 dataGridView1.ExpandColumns();
+                dataGridView1.CurrentCell = dataGridView1.Rows[0].Cells[1];
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine();
+                MessageBox.Show(ex.Message);
             }
         }
         /// <summary>
@@ -176,7 +176,7 @@ namespace AsyncOperations
             }
             catch (Exception ex)
             {
-                // ignored TODO
+                MessageBox.Show(ex.Message);
             }
         }
         /// <summary>

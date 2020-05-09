@@ -1,6 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Logging;
+using static Microsoft.Extensions.Logging.LoggerFactory;
+
 
 namespace AsyncOperations
 {
@@ -9,9 +13,16 @@ namespace AsyncOperations
         public NorthWindContext()
         {
         }
+        /// <summary>
+        /// Indicate to log or not
+        /// </summary>
+        /// <param name="log"></param>
+        public NorthWindContext(bool log)
+        {
+            Diagnostics = log;
+        }
 
-        public NorthWindContext(DbContextOptions<NorthWindContext> options)
-            : base(options)
+        public NorthWindContext(DbContextOptions<NorthWindContext> options) : base(options)
         {
         }
 
@@ -27,14 +38,48 @@ namespace AsyncOperations
         public virtual DbSet<Shippers> Shippers { get; set; }
         public virtual DbSet<Suppliers> Suppliers { get; set; }
 
+        /// <summary>
+        /// Enables console logging to be enabled or disabled
+        /// </summary>
+        public bool Diagnostics { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=NorthWindAzureForInserts;Integrated Security=True");
+
+                /*
+                 * This allows the connection string to use a different server dependent on
+                 * the user login name.
+                 */
+                var serverName = Environment.UserName == "Karens" ? "KARENS-PC" : ".\\SQLEXPRESS";
+
+                var connectionString = 
+                    $"Data Source={serverName};" + 
+                    "Initial Catalog=NorthWindAzureForInserts;" + 
+                    "Integrated Security=True";
+
+                if (Diagnostics)
+                {
+                    optionsBuilder.UseSqlServer(connectionString).UseLoggerFactory(ConsoleLoggerFactory);
+                }
+                else
+                {
+                    optionsBuilder.UseSqlServer(connectionString);
+                }
+
             }
         }
-
+        /// <summary>
+        /// Configure logging for app
+        /// https://docs.microsoft.com/en-us/ef/core/miscellaneous/logging?tabs=v3
+        /// </summary>
+        public static readonly ILoggerFactory ConsoleLoggerFactory = Create(builder =>
+        {
+            builder
+                .AddFilter((category, level) => 
+                    category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
+                .AddConsole();
+        });
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Categories>(entity =>

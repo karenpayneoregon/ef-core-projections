@@ -13,7 +13,7 @@ namespace AsyncOperations.Classes
 {
     public class Operations
     {
-        public static NorthWindContext Context { get; } = new NorthWindContext();
+        public static NorthWindContext Context { get; } = new NorthWindContext(log: true);
 
         /// <summary>
         /// Get all categories suitable for displaying in a ComboBox or
@@ -23,6 +23,7 @@ namespace AsyncOperations.Classes
         /// <returns></returns>
         public static async Task<List<Category>> GetCategoriesAllProjectionsAsync()
         {
+            
             var categoryList = new List<Category>();
 
             await Task.Run(async () =>
