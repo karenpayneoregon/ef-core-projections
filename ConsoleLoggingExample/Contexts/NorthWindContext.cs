@@ -2,6 +2,7 @@
 using ConsoleLoggingExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using static System.Configuration.ConfigurationManager;
 using static Microsoft.Extensions.Logging.LoggerFactory;
 
 
@@ -9,8 +10,18 @@ namespace ConsoleLoggingExample.Contexts
 {
     public partial class NorthWindContext : DbContext
     {
+        /// <summary>
+        /// Determine if logging will be used
+        /// </summary>
         public NorthWindContext()
         {
+            if (AppSettings["Diagnostics"] == null) return;
+
+            if (bool.TryParse(AppSettings["Diagnostics"], out var value ))
+            {
+                LoggingDiagnostics = value;
+            }
+
         }
         /// <summary>
         /// Indicate to log or not
@@ -18,7 +29,7 @@ namespace ConsoleLoggingExample.Contexts
         /// <param name="log"></param>
         public NorthWindContext(bool log)
         {
-            Diagnostics = log;
+            LoggingDiagnostics = log;
         }
 
         public NorthWindContext(DbContextOptions<NorthWindContext> options) : base(options)
@@ -40,24 +51,18 @@ namespace ConsoleLoggingExample.Contexts
         /// <summary>
         /// Enables console logging to be enabled or disabled
         /// </summary>
-        public bool Diagnostics { get; set; }
+        public bool LoggingDiagnostics { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 
-                /*
-                 * This allows the connection string to use a different server dependent on
-                 * the user login name.
-                 */
-                var serverName = Environment.UserName == "Karens" ? "KARENS-PC" : ".\\SQLEXPRESS";
-
                 var connectionString = 
-                    $"Data Source={serverName};" + 
-                    "Initial Catalog=NorthWindAzureForInserts;" + 
+                    $"Data Source={AppSettings["DatabaseServer"]};" +
+                    $"Initial Catalog={AppSettings["DefaultCatalog"]};" + 
                     "Integrated Security=True";
 
-                if (Diagnostics)
+                if (LoggingDiagnostics)
                 {
                     optionsBuilder
                         .UseSqlServer(connectionString)
