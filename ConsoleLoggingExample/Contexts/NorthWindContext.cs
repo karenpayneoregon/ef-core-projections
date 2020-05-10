@@ -15,16 +15,16 @@ namespace ConsoleLoggingExample.Contexts
         /// </summary>
         public NorthWindContext()
         {
-            if (AppSettings["Diagnostics"] == null) return;
+            if (AppSettings["UsingLogging"] == null) return;
 
-            if (bool.TryParse(AppSettings["Diagnostics"], out var value ))
+            if (bool.TryParse(AppSettings["UsingLogging"], out var value))
             {
                 LoggingDiagnostics = value;
             }
 
         }
         /// <summary>
-        /// Indicate to log or not
+        /// Determine if logging will be used
         /// </summary>
         /// <param name="log"></param>
         public NorthWindContext(bool log)
@@ -49,7 +49,7 @@ namespace ConsoleLoggingExample.Contexts
         public virtual DbSet<Suppliers> Suppliers { get; set; }
 
         /// <summary>
-        /// Enables console logging to be enabled or disabled
+        /// Set Console logging on or off
         /// </summary>
         public bool LoggingDiagnostics { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -57,9 +57,9 @@ namespace ConsoleLoggingExample.Contexts
             if (!optionsBuilder.IsConfigured)
             {
 
-                var connectionString = 
+                var connectionString =
                     $"Data Source={AppSettings["DatabaseServer"]};" +
-                    $"Initial Catalog={AppSettings["DefaultCatalog"]};" + 
+                    $"Initial Catalog={AppSettings["DefaultCatalog"]};" +
                     "Integrated Security=True";
 
                 if (LoggingDiagnostics)
@@ -79,6 +79,7 @@ namespace ConsoleLoggingExample.Contexts
         /// <summary>
         /// Configure logging for app
         /// https://docs.microsoft.com/en-us/ef/core/miscellaneous/logging?tabs=v3
+        /// https://github.com/dotnet/EntityFramework.Docs/blob/master/entity-framework/core/miscellaneous/logging.md
         /// </summary>
         public static readonly ILoggerFactory ConsoleLoggerFactory = Create(builder =>
         {
@@ -86,6 +87,7 @@ namespace ConsoleLoggingExample.Contexts
                 .AddFilter((category, level) => 
                     category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
                 .AddConsole();
+
         });
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
