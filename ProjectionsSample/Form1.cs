@@ -145,6 +145,10 @@ namespace AsyncOperations
                 dataGridView1.ExpandColumns();
                 dataGridView1.CurrentCell = dataGridView1.Rows[0].Cells[1];
 
+                // Projection
+                //var productsWithProjection = await Operations.GetProductsWithProjection(categoryIdentifier);
+
+
             }
             catch (Exception ex)
             {

@@ -167,6 +167,7 @@
     <Compile Include="Projections\ContactTypeItem.cs" />
     <Compile Include="Projections\Country.cs" />
     <Compile Include="Projections\Employee.cs" />
+    <Compile Include="Projections\Product.cs" />
     <Compile Include="Projections\Shipper.cs" />
     <Compile Include="Projections\Supplier.cs" />
     <Compile Include="Components\SortableBindingList.cs" />

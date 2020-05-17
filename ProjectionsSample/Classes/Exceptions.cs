@@ -8,6 +8,10 @@ namespace AsyncOperations.Classes
 
     public static class Exceptions
     {
+        /// <summary>
+        /// Write Exception information to UnhandledException.txt in the executable folder.
+        /// </summary>
+        /// <param name="exception"></param>
         public static void Write(Exception exception)
         {
             var fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UnhandledException.txt");

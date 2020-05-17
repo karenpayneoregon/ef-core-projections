@@ -120,23 +120,46 @@ namespace AsyncOperations.Classes
 
             return productList;
         }
-        #region permutations for projections
-
-        public static async Task<Orders> GetOrders(int customerIdentifier)
+        /// <summary>
+        /// Example for retrieving products via nested projection
+        /// </summary>
+        /// <param name="categoryIdentifier"></param>
+        /// <returns></returns>
+        public static async Task<List<Product>> GetProductsWithProjection(int categoryIdentifier)
         {
-            Orders orders1 = null;
+            var productList = new List<Product>();
 
             await Task.Run(async () =>
             {
 
-                orders1 = await Context
-                    .Orders.Include(orders => orders.OrderDetails)
+                productList = await Context.Products
+                    .Include(product => product.Supplier)
+                    .Where(product => product.CategoryId == categoryIdentifier)
+                    .Select(Product.Projection)
+                    .ToListAsync();
+
+            });
+
+            return productList;
+        }
+        #region permutations for projections
+
+        public static async Task<Orders> GetOrders(int customerIdentifier)
+        {
+            Orders order = null;
+
+            await Task.Run(async () =>
+            {
+
+                order = await Context
+                    .Orders
+                    .Include(orders => orders.OrderDetails)
                     .Include(orders => orders.CustomerIdentifierNavigation)
                     .FirstOrDefaultAsync(x => x.CustomerIdentifier == customerIdentifier);
 
             });
 
-            return orders1;
+            return order;
         }
         /// <summary>
         /// Using extension methods

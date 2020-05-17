@@ -16,11 +16,20 @@ namespace AsyncOperations.ModelExtensions
         {
             return query.Include(orders => orders.OrderDetails);
         }
-
+        /// <summary>
+        /// Get orders with customer
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static IQueryable<Orders> IncludeCustomer(this IQueryable<Orders> query)
         {
             return query.Include(orders => orders.CustomerIdentifierNavigation);
         }
+        /// <summary>
+        /// Get orders with customer and contact
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static IQueryable<Orders> IncludeCustomerAndContact(this IQueryable<Orders> query)
         {
             return query.Include(orders => orders.CustomerIdentifierNavigation)
@@ -28,7 +37,7 @@ namespace AsyncOperations.ModelExtensions
                 .Include(orders => orders.CustomerIdentifierNavigation.ContactTypeIdentifierNavigation);
         }
         /// <summary>
-        /// 
+        /// Example for including customer and customer contact or not
         /// </summary>
         /// <param name="query"></param>
         /// <param name="contact">Include contact information</param>
@@ -37,6 +46,7 @@ namespace AsyncOperations.ModelExtensions
         public static IQueryable<Orders> IncludeOptions(this IQueryable<Orders> query, bool contact = false, bool contactType = false)
         {
             IQueryable<Orders> customerQuery = query.Include(order => order.CustomerIdentifierNavigation);
+
             if (contact)
             {
                 customerQuery = customerQuery.Include(order => order.CustomerIdentifierNavigation.Contact);
