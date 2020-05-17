@@ -160,6 +160,7 @@
     <Compile Include="Examples\ExamplesForm.Designer.cs">
       <DependentUpon>ExamplesForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LanguageExtensions\ControlExtensions.cs" />
     <Compile Include="LanguageExtensions\ExceptionExtensions.cs" />
     <Compile Include="Projections\Category.cs" />
     <Compile Include="ModelExtensions\QueryExtensions.cs" />
@@ -212,6 +213,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="ClassDiagram1.cd" />
     <None Include="efpt.config.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

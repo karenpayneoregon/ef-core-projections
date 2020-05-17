@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AsyncOperations.Projections
 {
@@ -18,8 +14,6 @@ namespace AsyncOperations.Projections
         public short? UnitsInStock { get; set; }
         public short? UnitsOnOrder { get; set; }
         public short? ReorderLevel { get; set; }
-        public bool Discontinued { get; set; }
-        public DateTime? DiscontinuedDate { get; set; }
 
         public override string ToString() => ProductName;
 
@@ -30,8 +24,6 @@ namespace AsyncOperations.Projections
                 ProductName = product.ProductName,
                 SupplierName = product.Supplier.CompanyName,
                 SupplierId = product.SupplierId,
-                Discontinued = product.Discontinued,
-                DiscontinuedDate = product.DiscontinuedDate,
                 QuantityPerUnit = product.QuantityPerUnit,
                 ReorderLevel = product.ReorderLevel,
                 UnitPrice = product.UnitPrice,

@@ -38,6 +38,12 @@ namespace AsyncOperations.Classes
             return categoryList;
 
         }
+
+        public static List<Categories> Simple()
+        {
+            return Context.Categories.Include(category => category.Products).ToList();
+        }
+
         /// <summary>
         /// Get all categories suitable for displaying in a ComboBox or
         /// ListBox for reference only but unlike above will have all properties
@@ -65,6 +71,15 @@ namespace AsyncOperations.Classes
 
             return Context.Categories
                 .AsNoTracking()
+                .ToList();
+
+        }
+        public static List<Category> GetCategoriesAllNotTrackedProjections()
+        {
+
+            return Context.Categories
+                .AsNoTracking()
+                .Select(Category.Projection)
                 .ToList();
 
         }
@@ -125,7 +140,7 @@ namespace AsyncOperations.Classes
         /// </summary>
         /// <param name="categoryIdentifier"></param>
         /// <returns></returns>
-        public static async Task<List<Product>> GetProductsWithProjection(int categoryIdentifier)
+        public static async Task<List<Product>> GetProductsWithProjection(int categoryIdentifier, bool discontinued)
         {
             var productList = new List<Product>();
 
@@ -134,7 +149,9 @@ namespace AsyncOperations.Classes
 
                 productList = await Context.Products
                     .Include(product => product.Supplier)
-                    .Where(product => product.CategoryId == categoryIdentifier)
+                    .Where(product => product.CategoryId == categoryIdentifier && 
+                                             product.Discontinued == discontinued && 
+                                             product.UnitsInStock >0)
                     .Select(Product.Projection)
                     .ToListAsync();
 
@@ -189,8 +206,8 @@ namespace AsyncOperations.Classes
 
                 order = await Context.Orders
                     .IncludeCustomerAndContact()
-                    .FirstOrDefaultAsync(x => x.CustomerIdentifier == customerIdentifier);
-
+                    .FirstOrDefaultAsync(
+                        ord => ord.CustomerIdentifier == customerIdentifier);
             });
 
             return order;

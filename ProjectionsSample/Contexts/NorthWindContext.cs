@@ -80,8 +80,12 @@ namespace AsyncOperations
         {
             builder
                 .AddFilter((category, level) => 
-                    category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
-                .AddConsole();
+                    category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information);
+
+            #if  DEBUG
+            builder.AddConsole();
+            #endif
+
         });
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

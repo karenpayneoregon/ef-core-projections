@@ -61,6 +61,10 @@ namespace AsyncOperations
         private async void Form1_Shown(object sender, EventArgs e)
         {
 
+            #if DEBUG
+            Console.WriteLine("Loading categories");
+            #endif
+
             var categories = await Operations.GetCategoriesAllProjectionsAsync();
             CategoryComboBox.DataSource = categories;
 
@@ -69,6 +73,10 @@ namespace AsyncOperations
             SupplierColumn.DataPropertyName = "SupplierId";
             SupplierColumn.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
 
+            #if DEBUG
+            Console.WriteLine();
+            Console.WriteLine("Loading Suppliers");
+            #endif
             _supperList = await Operations.GetSupplierAsync();
 
             dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
@@ -134,9 +142,24 @@ namespace AsyncOperations
 
             try
             {
+                #if DEBUG
+                    Console.WriteLine($"Products for category \"{ CategoryComboBox.Text }\"");
+                #endif
 
                 _productView = new SortableBindingList<Products>(await Operations.GetProducts(categoryIdentifier));
 
+                // no products e.g. the Wine category has no products
+                if (_productView.Count == 0)
+                {
+                    
+                    _productBindingSource.DataSource = null;
+
+                    MessageBox.Show($"No products for {CategoryComboBox.Text}");
+
+                    return;
+
+                }
+                
                 _productView.ListChanged += _productView_ListChanged;
                 _productBindingSource.DataSource = _productView;
                 SupplierColumn.DataSource = _supperList;
@@ -144,10 +167,6 @@ namespace AsyncOperations
 
                 dataGridView1.ExpandColumns();
                 dataGridView1.CurrentCell = dataGridView1.Rows[0].Cells[1];
-
-                // Projection
-                //var productsWithProjection = await Operations.GetProductsWithProjection(categoryIdentifier);
-
 
             }
             catch (Exception ex)
