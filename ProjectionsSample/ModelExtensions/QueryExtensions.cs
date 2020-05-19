@@ -34,7 +34,9 @@ namespace AsyncOperations.ModelExtensions
         {
             return query.Include(orders => orders.CustomerIdentifierNavigation)
                 .ThenInclude(customer => customer.Contact)
-                .Include(orders => orders.CustomerIdentifierNavigation.ContactTypeIdentifierNavigation);
+                .Include(orders => 
+                    orders.CustomerIdentifierNavigation.ContactTypeIdentifierNavigation);
+
         }
         /// <summary>
         /// Example for including customer and customer contact or not
@@ -49,7 +51,8 @@ namespace AsyncOperations.ModelExtensions
 
             if (contact)
             {
-                customerQuery = customerQuery.Include(order => order.CustomerIdentifierNavigation.Contact);
+                customerQuery = customerQuery.Include(order => 
+                    order.CustomerIdentifierNavigation.Contact);
             }
 
             if (contactType)
