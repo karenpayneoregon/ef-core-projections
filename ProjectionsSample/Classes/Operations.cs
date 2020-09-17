@@ -49,11 +49,11 @@ namespace AsyncOperations.Classes
 
             return await Task.Run(async () =>
             {
-                List<Employee> customerItemsList = await Context.Employees
+                List<Employee> employeesList = await Context.Employees
                     .Select(Employee.Projection)
                     .ToListAsync();
 
-                return customerItemsList;
+                return employeesList;
             });
 
         }
