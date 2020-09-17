@@ -44,6 +44,25 @@ namespace AsyncOperations.Classes
             return Context.Categories.Include(category => category.Products).ToList();
         }
 
+        public static async Task<List<Employee>> EmployeesProjected()
+        {
+
+            return await Task.Run(async () =>
+            {
+                List<Employee> customerItemsList = await Context.Employees
+                    .Select(Employee.Projection)
+                    .ToListAsync();
+
+                return customerItemsList;
+            });
+
+        }
+
+        public static List<Employees> Employees()
+        {
+            return Context.Employees.ToList();
+        }
+
         /// <summary>
         /// Get all categories suitable for displaying in a ComboBox or
         /// ListBox for reference only but unlike above will have all properties

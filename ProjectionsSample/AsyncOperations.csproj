@@ -148,11 +148,18 @@
   <ItemGroup>
     <Compile Include="Classes\Dialogs.cs" />
     <Compile Include="Classes\Exceptions.cs" />
+    <Compile Include="Classes\FileLoggerProvider.cs" />
     <Compile Include="Examples\CheckProductsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Examples\CheckProductsForm.Designer.cs">
       <DependentUpon>CheckProductsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Examples\EmployeesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Examples\EmployeesForm.Designer.cs">
+      <DependentUpon>EmployeesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Examples\ExamplesForm.cs">
       <SubType>Form</SubType>
@@ -196,6 +203,9 @@
     <Compile Include="Models\Suppliers.cs" />
     <EmbeddedResource Include="Examples\CheckProductsForm.resx">
       <DependentUpon>CheckProductsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Examples\EmployeesForm.resx">
+      <DependentUpon>EmployeesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Examples\ExamplesForm.resx">
       <DependentUpon>ExamplesForm.cs</DependentUpon>
